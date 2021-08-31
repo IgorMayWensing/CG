@@ -6,7 +6,7 @@ from tkinter import ttk
 import re
 import numpy
 
-
+#export DISPLAY=:0;
 #----------------------------------------------Janela Pricipal--------------------------------------------------------------#
 #Cria a janela principal
 janelaPrincipal = Tk()
@@ -388,7 +388,7 @@ ladoDireito.grid(row=0, column=1)
 
 #Criando canvas
 canvasWidth = 500
-canvasHeight = 510
+canvasHeight = 500
 canvas = Canvas(ladoDireito, bg="white", width=canvasWidth, height=canvasHeight)
 canvas.grid(row=0, column=1)
 
@@ -487,13 +487,14 @@ botaoAdicionarObjeto = Button(labelWindow, text="Adicionar objeto", command=abri
 botaoAdicionarObjeto.place(relx=0.25, rely=0.28)
 
 #------------------------------------------------------------------------------------------------------------------------------#
+#def clipping():
 
 #Método para desenhar o objeto no canvas
-def desenhar():
-    
+def desenhar():    
     #Antes de desenhar apaga tudo q estava desenhado
     canvas.delete("all")
-    
+    canvas.create_line(50,50,450,50,450,450,50,450,50,50,fill='blue')
+
     for objeto in objetosCriados:
         if objeto.tipo == 'Ponto':
             listaAuxiliar = []
@@ -502,6 +503,11 @@ def desenhar():
                     listaAuxiliar.append(transformadaParaX(objeto.pontos[iterador]))
                 else:
                     listaAuxiliar.append(transformadaParaY(objeto.pontos[iterador]))
+            
+            #clipping de ponto
+            if listaAuxiliar[0] < 50 or listaAuxiliar[0] > 450 or listaAuxiliar[1] < 50 or listaAuxiliar[1] > 450:
+                continue
+
             if objeto.cor == 'Amarelo':
                 canvas.create_oval((listaAuxiliar[0], listaAuxiliar[1]), (listaAuxiliar[0],listaAuxiliar[1]), fill='yellow', width=2)
             elif objeto.cor == 'Azul':
@@ -513,6 +519,7 @@ def desenhar():
             elif objeto.cor == 'Preto':
                 canvas.create_oval((listaAuxiliar[0], listaAuxiliar[1]), (listaAuxiliar[0],listaAuxiliar[1]), fill='black', width=2)
         
+
         elif objeto.tipo == 'Reta':   
             listaAuxiliar = []
             for iterador in range(len(objeto.pontos)):
@@ -520,6 +527,9 @@ def desenhar():
                     listaAuxiliar.append(transformadaParaX(objeto.pontos[iterador]))
                 else:
                     listaAuxiliar.append(transformadaParaY(objeto.pontos[iterador]))
+
+            listaAuxiliar = clipping(listaAuxiliar)
+
             if objeto.cor == 'Amarelo':
                 canvas.create_line(listaAuxiliar, fill='yellow')
             elif objeto.cor == 'Azul':
@@ -540,6 +550,9 @@ def desenhar():
                     listaAuxiliar.append(transformadaParaX(objeto.pontos[iterador]))
                 else:
                     listaAuxiliar.append(transformadaParaY(objeto.pontos[iterador]))
+
+            listaAuxiliar = clipping(listaAuxiliar)
+
             if objeto.cor == 'Amarelo':
                 canvas.create_line(listaAuxiliar, fill='yellow')
             elif objeto.cor == 'Azul':
@@ -553,6 +566,13 @@ def desenhar():
             
             objeto.pontos= objeto.pontos[:-2]
             
+def clipping(auxlist):
+    for i in range(0, len(auxlist), 2):
+        auxlist[i].
+        auxlist[i].
+
+
+    return auxlist
 
 #Cáculo da transformada de viewport
 def transformadaParaX(x):
@@ -593,6 +613,5 @@ def atualizaCoordsWindow():
     copiaCoordsWindow[6] = (window.x_min)
     copiaCoordsWindow[7] = (window.y_max)
 
-print("copiaCoordsWindow:", copiaCoordsWindow)
-print("centro da window:", calcularCentroXwindow(copiaCoordsWindow), calcularCentroYwindow(copiaCoordsWindow))
+canvas.create_line(50,50,450,50,450,450,50,450,50,50,fill='blue')
 janelaPrincipal.mainloop()
