@@ -132,8 +132,7 @@ def rotacionarWindow():
             mult = numpy.matmul(mult, matrixRotacionar)
             mult = numpy.matmul(mult, matrixDireita)
             objetosCriados[i].pontos[z] = mult[0][0]
-            objetosCriados[i].pontos[z+1] = mult[0][1]
-        break 
+            objetosCriados[i].pontos[z+1] = mult[0][1] 
 
     desenhar()
             
