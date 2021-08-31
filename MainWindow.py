@@ -115,105 +115,27 @@ def calcularCentroYwindow(pontos):
     return soma/n
 
 def rotacionarWindow():
-   
+    atualizaCoordsWindow()
     #rotacionar os pontos da window para o lado esquerdo em 30 graus
     angulo = -(float(30))
-    matrixRotacao =[[numpy.cos(angulo* numpy.pi/180), -(numpy.sin(angulo* numpy.pi/180)), 0], [numpy.sin(angulo* numpy.pi/180), numpy.cos(angulo* numpy.pi/180), 0], [0, 0, 1]]
-    matrixEsquerda = [[1, 0, 0], [0, 1, 0], [-(calcularCentroXwindow(copiaCoordsWindow)),-(calcularCentroYwindow(copiaCoordsWindow)), 1]]
-    matrixDireita = [[1, 0, 0], [0, 1, 0], [(calcularCentroXwindow(copiaCoordsWindow)),(calcularCentroYwindow(copiaCoordsWindow)), 1]]
-    
-    for z in range(0,len(copiaCoordsWindow),2):
-        arrayAuxiliar = [[copiaCoordsWindow[z], copiaCoordsWindow[z+1], 1]]
-        mult = numpy.matmul(arrayAuxiliar, matrixEsquerda)
-        mult = numpy.matmul(mult, matrixRotacao)
-        mult = numpy.matmul(mult, matrixDireita)
-        copiaCoordsWindow[z] = mult[0][0]
-        copiaCoordsWindow[z+1] = mult[0][1]
 
-    #Transladar WC para origem
-    matrixTranslacao =[[1, 0, 0], [0, 1, 0], [0, 0, 1]];
-    for z in range(0,len(copiaCoordsWindow),2):
-        arrayAuxiliar = [[copiaCoordsWindow[z], copiaCoordsWindow[z+1], 1]]
-        mult = numpy.matmul(arrayAuxiliar, matrixTranslacao)
-        copiaCoordsWindow[z] = mult[0][0]
-        copiaCoordsWindow[z+1] = mult[0][1]
-    
     #Transladar o mundo de [-Wcx, -Wcy], Rotacionar o mundo, Escalonar o mundo
-    for i in range(len(objetosCriados)):
-        angulo = angulo*-1
-        matrixTransladar = [[1, 0, 0], [0, 1, 0], [-(calcularCentroXwindow(copiaCoordsWindow)),-(calcularCentroYwindow(copiaCoordsWindow)), 1]];
-        matrixRotacionar= matrixRotacao =[[numpy.cos(angulo* numpy.pi/180), -(numpy.sin(angulo* numpy.pi/180)), 0], [numpy.sin(angulo* numpy.pi/180), numpy.cos(angulo* numpy.pi/180), 0], [0, 0, 1]];
-        matrixEscalonar= [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
-        for i in range(0, len(objetosCriados)):
-            for z in range(0,len(objetosCriados[i].pontosDaWindow),2):
-                arrayAuxiliar = [[objetosCriados[i].pontosDaWindow[z], objetosCriados[i].pontosDaWindow[z+1], 1]]
-                mult = numpy.matmul(arrayAuxiliar, matrixTransladar)
-                mult = numpy.matmul(mult, matrixRotacionar)
-                mult = numpy.matmul(mult, matrixEscalonar)
-                objetosCriados[i].pontosDaWindow[z] = mult[0][0]
-                objetosCriados[i].pontosDaWindow[z+1] = mult[0][1]
-            break
+    angulo = angulo*-1
+    matrixEsquerda = [[1, 0, 0], [0, 1, 0], [-(calcularCentroXwindow(copiaCoordsWindow)),-(calcularCentroYwindow(copiaCoordsWindow)), 1]]
+    matrixRotacionar= [[numpy.cos(angulo* numpy.pi/180), -(numpy.sin(angulo* numpy.pi/180)), 0], [numpy.sin(angulo* numpy.pi/180), numpy.cos(angulo* numpy.pi/180), 0], [0, 0, 1]]
+    matrixDireita= [[1, 0, 0], [0, 1, 0], [(calcularCentroXwindow(copiaCoordsWindow)),(calcularCentroYwindow(copiaCoordsWindow)), 1]]
     
-    #Desenhar o mundo novamente
-    canvas.delete("all")
-    for objeto in objetosCriados:
-        if objeto.tipo == 'Ponto':
-            listaAuxiliar = []
-            for iterador in range(len(objeto.pontosDaWindow)):
-                if iterador % 2 == 0:
-                    listaAuxiliar.append(transformadaParaX(objeto.pontosDaWindow[iterador]))
-                else:
-                    listaAuxiliar.append(transformadaParaY(objeto.pontosDaWindow[iterador]))
-            if objeto.cor == 'Amarelo':
-                canvas.create_oval((listaAuxiliar[0], listaAuxiliar[1]), (listaAuxiliar[0],listaAuxiliar[1]), fill='yellow', width=2)
-            elif objeto.cor == 'Azul':
-                canvas.create_oval((listaAuxiliar[0], listaAuxiliar[1]), (listaAuxiliar[0],listaAuxiliar[1]), fill='blue', width=2)
-            elif objeto.cor == 'Verde':
-                canvas.create_oval((listaAuxiliar[0], listaAuxiliar[1]), (listaAuxiliar[0],listaAuxiliar[1]), fill='green', width=2)
-            elif objeto.cor == 'Vermelho':
-                canvas.create_oval((listaAuxiliar[0], listaAuxiliar[1]), (listaAuxiliar[0],listaAuxiliar[1]), fill='red', width=2)
-            elif objeto.cor == 'Preto':
-                canvas.create_oval((listaAuxiliar[0], listaAuxiliar[1]), (listaAuxiliar[0],listaAuxiliar[1]), fill='black', width=2)
-        
-        elif objeto.tipo == 'Reta':   
-            listaAuxiliar = []
-            for iterador in range(len(objeto.pontosDaWindow)):
-                if iterador % 2 == 0:
-                    listaAuxiliar.append(transformadaParaX(objeto.pontosDaWindow[iterador]))
-                else:
-                    listaAuxiliar.append(transformadaParaY(objeto.pontosDaWindow[iterador]))
-            if objeto.cor == 'Amarelo':
-                canvas.create_line(listaAuxiliar, fill='yellow')
-            elif objeto.cor == 'Azul':
-                canvas.create_line(listaAuxiliar, fill='blue')
-            elif objeto.cor == 'Verde':
-                canvas.create_line(listaAuxiliar, fill='green')
-            elif objeto.cor == 'Vermelho':
-                canvas.create_line(listaAuxiliar, fill='red')
-            elif objeto.cor == 'Preto':
-                canvas.create_line(listaAuxiliar, fill='black')
-        
-        elif objeto.tipo == 'Polígono':
-            listaAuxiliar = []
-            objeto.pontosDaWindow.append(objeto.pontosDaWindow[0])
-            objeto.pontosDaWindow.append(objeto.pontosDaWindow[1])
-            for iterador in range(len(objeto.pontosDaWindow)):
-                if iterador % 2 == 0:
-                    listaAuxiliar.append(transformadaParaX(objeto.pontosDaWindow[iterador]))
-                else:
-                    listaAuxiliar.append(transformadaParaY(objeto.pontosDaWindow[iterador]))
-            if objeto.cor == 'Amarelo':
-                canvas.create_line(listaAuxiliar, fill='yellow')
-            elif objeto.cor == 'Azul':
-                canvas.create_line(listaAuxiliar, fill='blue')
-            elif objeto.cor == 'Verde':
-                canvas.create_line(listaAuxiliar, fill='green')
-            elif objeto.cor == 'Vermelho':
-                canvas.create_line(listaAuxiliar, fill='red')
-            elif objeto.cor == 'Preto':
-                canvas.create_line(listaAuxiliar, fill='black')
-            
-            objeto.pontos= objeto.pontosDaWindow[:-2]
+    for i in range(len(objetosCriados)):   
+        for z in range(0,len(objetosCriados[i].pontos),2):
+            arrayAuxiliar = [[objetosCriados[i].pontos[z], objetosCriados[i].pontos[z+1], 1]]
+            mult = numpy.matmul(arrayAuxiliar, matrixEsquerda)
+            mult = numpy.matmul(mult, matrixRotacionar)
+            mult = numpy.matmul(mult, matrixDireita)
+            objetosCriados[i].pontos[z] = mult[0][0]
+            objetosCriados[i].pontos[z+1] = mult[0][1]
+        break 
+
+    desenhar()
             
 def calcularCentroXobj(objeto):
     soma = 0
@@ -492,13 +414,15 @@ def abrirJanelaAdicionarObjeto():
     entradaNome = Entry(janelaParaAdicionarObjetos, width=27)
     nome.place(relx=0.1, rely=0)
     entradaNome.place(relx=0.3, rely=0)
-    
+    entradaNome.insert(END, 'Test')
+
     #Espaço para selecionar o tipo do objeto
     tipo = Label(janelaParaAdicionarObjetos, text="Tipo:")
     tipo.place(relx=0.1, rely = 0.15)
     listaTipos = ["Ponto", "Reta", "Polígono"]
     tipoCb=ttk.Combobox(janelaParaAdicionarObjetos, values =listaTipos, width = 26)
     tipoCb.place(relx = 0.3, rely=0.15)
+    tipoCb.current(2)
     
     #Espaço para selecionar a cor do objeto
     cor = Label(janelaParaAdicionarObjetos, text="Cor:")
@@ -515,6 +439,8 @@ def abrirJanelaAdicionarObjeto():
     entradaCoordenadas.place(relx=0.3, rely = 0.45)
     exemploDeCoordenadas = Label(janelaParaAdicionarObjetos, text = "(x1, y1),(x2, y2)...")
     exemploDeCoordenadas.place(relx=0.3, rely=0.6)
+    entradaCoordenadas.insert(END, '200,235,300,235,250,300')
+
     
     #Botão para gerar objetos
     botaoGerarObjeto = Button(janelaParaAdicionarObjetos, text="Gerar objeto", width = 15, command= lambda: gerarObjeto(tipoCb.get(), corCb.get()))
@@ -655,5 +581,19 @@ copiaCoordsWindow.append(window.y_max)
 copiaCoordsWindow.append(window.x_min)
 copiaCoordsWindow.append(window.y_max)
 
+def atualizaCoordsWindow():
+    copiaCoordsWindow[0] = (window.x_min)
+    copiaCoordsWindow[1] = (window.y_min)
 
+    copiaCoordsWindow[2] = (window.x_max)
+    copiaCoordsWindow[3] = (window.y_min)
+
+    copiaCoordsWindow[4] = (window.x_max)
+    copiaCoordsWindow[5] = (window.y_max)
+
+    copiaCoordsWindow[6] = (window.x_min)
+    copiaCoordsWindow[7] = (window.y_max)
+
+print("copiaCoordsWindow:", copiaCoordsWindow)
+print("centro da window:", calcularCentroXwindow(copiaCoordsWindow), calcularCentroYwindow(copiaCoordsWindow))
 janelaPrincipal.mainloop()
