@@ -5,6 +5,7 @@ from tkinter import *
 from tkinter import ttk
 import re
 import numpy
+from bitarray import bitarray
 
 #export DISPLAY=:0;
 #----------------------------------------------Janela Pricipal--------------------------------------------------------------#
@@ -42,6 +43,11 @@ porcentagemPasso = Label(labelWindow, text="%")
 passo.place(relx=0.1, rely=0.01)
 entradaPasso.place(relx=0.33, rely=0.01,relheight=0.035, relwidth=0.25)
 porcentagemPasso.place(relx=0.6, rely=0.01)
+
+window_x_min = 50
+window_x_max = 450
+window_y_min = 50
+window_y_max = 450
 
 #funções dos botões
 def moverWindowCima():
@@ -567,9 +573,46 @@ def desenhar():
             objeto.pontos= objeto.pontos[:-2]
             
 def clipping(auxlist):
-    for i in range(0, len(auxlist), 2):
-        auxlist[i].
-        auxlist[i].
+    
+    for i in range(0, len(auxlist), 4):
+        rc_A = bitarray('0000')
+        rc_B = bitarray('0000')
+        rc_zero = bitarray('0000')
+
+        if auxlist[0] < window_x_min: # Esquerda
+            rc_A.pop(3)
+            rc_A.insert(3, 1)
+        if auxlist[0] > window_x_max: # Direita
+            rc_A.pop(2)
+            rc_A.insert(2, 1)
+        if auxlist[1] < window_y_min: # Acima
+            rc_A.pop(1)
+            rc_A.insert(0, 1)
+        if auxlist[1] > window_y_max: # abaixo
+            rc_A.pop(0)
+            rc_A.insert(1, 1)
+
+        if auxlist[2] < window_x_min: # Esquerda
+            rc_B.pop(3)
+            rc_B.insert(3, 1)
+        if auxlist[2] > window_x_max: # Direita
+            rc_B.pop(2)
+            rc_B.insert(2, 1)
+        if auxlist[3] < window_y_min: # Acima
+            rc_B.pop(1)
+            rc_B.insert(0, 1)
+        if auxlist[3] > window_y_max: # Abaixo
+            rc_B.pop(0)
+            rc_B.insert(1, 1)
+        
+        print(rc_A, rc_B)
+        if (rc_A == rc_zero)and(rc_B == rc_zero):
+            print("reta interna")
+        if ((rc_A & rc_B) != rc_zero):
+            print("reta externa")
+        if (rc_A != rc_B) and ((rc_A & rc_B) == rc_zero):
+            print("deve-se recortar!")
+        print("------------------")
 
 
     return auxlist
