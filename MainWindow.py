@@ -608,12 +608,80 @@ def clipping(auxlist):
         print(rc_A, rc_B)
         if (rc_A == rc_zero)and(rc_B == rc_zero):
             print("reta interna")
+            continue
         if ((rc_A & rc_B) != rc_zero):
             print("reta externa")
+            auxlist.pop(1)
+            auxlist.pop(0)
         if (rc_A != rc_B) and ((rc_A & rc_B) == rc_zero):
             print("deve-se recortar!")
-        print("------------------")
+            m = (auxlist[3] - auxlist[1])/(auxlist[2] - auxlist[0]) #coeficiente angular     
 
+            if (rc_A & bitarray('0001')) == bitarray('0001'):
+                yintersec = m* (window_x_min - auxlist[0]) + auxlist[1] # Esquerda
+                if (yintersec > window_y_min) or (yintersec < window_y_max):
+                    auxlist[0] = window_x_min
+                    auxlist[1] = yintersec
+                else:
+                    continue     
+                       
+            if (rc_A & bitarray('0010')) == bitarray('0010'):    
+                yintersec = m* (window_x_max - auxlist[0]) + auxlist[1] # Direita
+                if (yintersec > window_y_min) or (yintersec < window_y_max):
+                    auxlist[0] = window_x_max
+                    auxlist[1] = yintersec
+                else:
+                    continue  
+
+            if (rc_A & bitarray('1000')) == bitarray('1000'):    
+                xintersec = auxlist[0] + (1/m) * (window_y_max - auxlist[1]) # Topo
+                if (xintersec > window_x_min) or (xintersec < window_x_max):
+                    auxlist[0] = xintersec
+                    auxlist[1] = window_y_max
+                else:
+                    continue  
+
+            if (rc_A & bitarray('0100')) == bitarray('0100'):
+                xintersec = auxlist[0] + (1/m) * (window_y_min - auxlist[1]) # Fundo
+                if (xintersec > window_x_min) or (xintersec < window_x_max):
+                    auxlist[0] = xintersec
+                    auxlist[1] = window_y_min
+                else:
+                    continue 
+
+
+            if (rc_B & bitarray('0001')) == bitarray('0001'):
+                yintersec = m* (window_x_min - auxlist[2]) + auxlist[3] # Esquerda
+                if (yintersec > window_y_min) or (yintersec < window_y_max):
+                    auxlist[2] = window_x_min
+                    auxlist[3] = yintersec
+                else:
+                    continue
+
+            if (rc_B & bitarray('0010')) == bitarray('0010'):    
+                yintersec = m* (window_x_max - auxlist[2]) + auxlist[3] # Direita
+                if (yintersec > window_y_min) or (yintersec < window_y_max):
+                    auxlist[2] = window_x_max
+                    auxlist[3] = yintersec
+                else:
+                    continue
+
+            
+            if (rc_B & bitarray('1000')) == bitarray('1000'): 
+                xintersec = auxlist[2] + (1/m) * (window_y_max - auxlist[3]) # Topo
+                if (xintersec > window_x_min) or (xintersec < window_x_max):
+                    auxlist[2] = xintersec
+                    auxlist[3] = window_y_max
+                else:
+                    continue 
+
+            if (rc_B & bitarray('0100')) == bitarray('0100'):
+                xintersec = auxlist[2] + (1/m) * (window_y_min - auxlist[3]) # Fundo
+                if (xintersec > window_x_min) or (xintersec < window_x_max):
+                    auxlist[2] = xintersec
+                    auxlist[3] = window_y_min
+                else:
+                    continue 
 
     return auxlist
 
