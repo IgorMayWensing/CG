@@ -609,11 +609,13 @@ def clipping(auxlist):
         if (rc_A == rc_zero)and(rc_B == rc_zero):
             print("reta interna")
             continue
-        if ((rc_A & rc_B) != rc_zero):
+        elif ((rc_A & rc_B) != rc_zero):
             print("reta externa")
-            auxlist.pop(1)
-            auxlist.pop(0)
-        if (rc_A != rc_B) and ((rc_A & rc_B) == rc_zero):
+            auxlist.pop(i)
+            auxlist.pop(i+1)
+            auxlist.pop(i+2)
+            auxlist.pop(i+3)
+        elif (rc_A != rc_B) and ((rc_A & rc_B) == rc_zero):
             print("deve-se recortar!")
             m = (auxlist[i+3] - auxlist[i+1])/(auxlist[i+2] - auxlist[i]) #coeficiente angular     
 
@@ -623,6 +625,10 @@ def clipping(auxlist):
                     auxlist[i] = window_x_min
                     auxlist[i+1] = yintersec
                 else:
+                    auxlist.pop(i)
+                    auxlist.pop(i+1)
+                    auxlist.pop(i+2)
+                    auxlist.pop(i+3)
                     continue     
                        
             if (rc_A & bitarray('0010')) == bitarray('0010'):    
@@ -631,6 +637,10 @@ def clipping(auxlist):
                     auxlist[i] = window_x_max
                     auxlist[i+1] = yintersec
                 else:
+                    auxlist.pop(i)
+                    auxlist.pop(i+1)
+                    auxlist.pop(i+2)
+                    auxlist.pop(i+3)
                     continue  
 
             if (rc_A & bitarray('0100')) == bitarray('0100'):    
@@ -639,6 +649,10 @@ def clipping(auxlist):
                     auxlist[i] = xintersec
                     auxlist[i+1] = window_y_max
                 else:
+                    auxlist.pop(i)
+                    auxlist.pop(i+1)
+                    auxlist.pop(i+2)
+                    auxlist.pop(i+3)
                     continue  
 
             if (rc_A & bitarray('1000')) == bitarray('1000'):
@@ -647,6 +661,10 @@ def clipping(auxlist):
                     auxlist[i] = xintersec
                     auxlist[i+1] = window_y_min
                 else:
+                    auxlist.pop(i)
+                    auxlist.pop(i+1)
+                    auxlist.pop(i+2)
+                    auxlist.pop(i+3)
                     continue 
 
 
@@ -656,6 +674,10 @@ def clipping(auxlist):
                     auxlist[i+2] = window_x_min
                     auxlist[i+3] = yintersec
                 else:
+                    auxlist.pop(i)
+                    auxlist.pop(i+1)
+                    auxlist.pop(i+2)
+                    auxlist.pop(i+3)
                     continue
 
             if (rc_B & bitarray('0010')) == bitarray('0010'):    
@@ -664,6 +686,10 @@ def clipping(auxlist):
                     auxlist[i+2] = window_x_max
                     auxlist[i+3] = yintersec
                 else:
+                    auxlist.pop(i)
+                    auxlist.pop(i+1)
+                    auxlist.pop(i+2)
+                    auxlist.pop(i+3)
                     continue
 
             
@@ -673,6 +699,10 @@ def clipping(auxlist):
                     auxlist[i+2] = xintersec
                     auxlist[i+3] = window_y_max
                 else:
+                    auxlist.pop(i)
+                    auxlist.pop(i+1)
+                    auxlist.pop(i+2)
+                    auxlist.pop(i+3)
                     continue 
 
             if (rc_B & bitarray('1000')) == bitarray('1000'):
@@ -681,6 +711,10 @@ def clipping(auxlist):
                     auxlist[i+2] = xintersec
                     auxlist[i+3] = window_y_min
                 else:
+                    auxlist.pop(i)
+                    auxlist.pop(i+1)
+                    auxlist.pop(i+2)
+                    auxlist.pop(i+3)
                     continue 
 
     return auxlist
